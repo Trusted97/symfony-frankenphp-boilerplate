@@ -31,8 +31,8 @@ docker compose exec php bin/console doctrine:migrations:migrate --no-interaction
 
 Open:
 
-- App: `https://localhost`
-- Admin: `https://localhost/admin`
+- App: [https://localhost](https://localhost)
+- Admin: [https://localhost/admin](https://localhost/admin)
 
 ## Production
 
