@@ -19,7 +19,13 @@
     </script>
 
     {% block stylesheets %}
-        {{ encore_entry_link_tags('app') }}
+
+        {% for css in encore_entry_css_files('app') %}
+            <link rel="preload" href="{{ asset(css) }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+            <noscript><link type="text/css" href="{{ asset(css) }}" rel="stylesheet"></noscript>
+            <link type="text/css" href="{{ asset(css) }}" rel="stylesheet">
+        {% endfor %}
+
     {% endblock %}
 
 </head>
@@ -45,8 +51,10 @@
     </div>
 </footer>
 
-{% block javascripts %}
-    {{ encore_entry_script_tags('app') }}
+{% block javascript %}
+    {% for js in encore_entry_js_files('app') %}
+        <script src="{{ asset(js) }}" type="text/javascript" async defer></script>
+    {% endfor %}
 {% endblock %}
 
 </body>
