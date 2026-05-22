@@ -7,7 +7,7 @@ use Symfony\Component\Routing\RouterInterface;
 
 class RouteRegistrationTest extends KernelTestCase
 {
-    public function test_registers_homepage_and_admin_routes(): void
+    public function testRegistersHomepageAndAdminRoutes(): void
     {
         self::bootKernel();
 

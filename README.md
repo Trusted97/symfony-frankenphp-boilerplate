@@ -1,4 +1,12 @@
 # Symfony EasyAdmin Boilerplate
+![Symfony](https://img.shields.io/badge/Symfony-7.4-black?logo=symfony)
+![PHP](https://img.shields.io/badge/PHP-8.4-777BB4?logo=php&logoColor=white)
+![EasyAdmin](https://img.shields.io/badge/EasyAdmin-5-blue)
+![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white)
+![FrankenPHP](https://img.shields.io/badge/FrankenPHP-enabled-000000)
+![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql&logoColor=white)
+![Webpack](https://img.shields.io/badge/Webpack-Encore-8DD6F9?logo=webpack&logoColor=black)
+![License](https://img.shields.io/badge/license-MIT-green)
 
 Minimal Symfony 7.4 boilerplate with FrankenPHP, Docker, MySQL, Webpack Encore, and EasyAdmin.
 
