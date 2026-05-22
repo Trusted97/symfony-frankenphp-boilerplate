@@ -1,0 +1,108 @@
+---
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    env:
+      APP_ENV: test
+      APP_SECRET: test-secret
+      DATABASE_URL: mysql://app:app@127.0.0.1:3306/app_test?serverVersion=8.0&charset=utf8mb4
+      DEFAULT_URI: https://localhost
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: ctype, iconv, intl, pdo_mysql, zip
+          coverage: none
+          tools: composer:v2
+
+      - name: Get Composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: composer-${{ runner.os }}-${{ hashFiles('composer.lock') }}
+          restore-keys: |
+            composer-${{ runner.os }}-
+
+      - name: Validate Composer files
+        run: composer validate --strict --no-check-publish
+
+      - name: Install PHP dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Lint PHP files
+        run: find src tests -name '*.php' -print0 | xargs -0 -n1 php -l
+
+      - name: Run PHPUnit
+        run: composer test
+
+      - name: Run PHPStan
+        run: vendor/bin/phpstan analyse --configuration=phpstan.dist.neon --no-progress --debug
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: yarn
+
+      - name: Install frontend dependencies
+        run: yarn install --frozen-lockfile --non-interactive
+
+      - name: Build frontend assets
+        run: yarn build
+
+  docker-production-build:
+    name: Docker Production Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs:
+      - quality
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build production image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile
+          target: frankenphp_prod
+          push: false
+          load: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

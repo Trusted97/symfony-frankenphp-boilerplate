@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <section class="py-5">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-8">
+                <h1 class="display-5 fw-bold">Symfony EasyAdmin Boilerplate</h1>
+                <p class="lead mb-4">
+                    Minimal Symfony setup with Docker, MySQL, FrankenPHP, Webpack Encore, and one sample entity ready for EasyAdmin.
+                </p>
+                <a class="btn btn-primary" href="{{ path('admin') }}">Open admin</a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

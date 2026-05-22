@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <title>{% block title %}Symfony EasyAdmin Boilerplate{% endblock %}</title>
+
+    <meta name="description" content="A minimal Symfony and EasyAdmin boilerplate.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/build/service-worker.js')
+                    .then(registration => console.log('SW registered:', registration))
+                    .catch(error => console.log('SW registration failed:', error));
+            });
+        }
+    </script>
+
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+
+</head>
+<body>
+<nav class="navbar navbar-expand-lg sticky-top shadow-sm">
+    <div class="container">
+        <a class="navbar-brand" href="{{ path('app_homepage') }}">
+            Symfony EasyAdmin Boilerplate
+        </a>
+        <a class="btn btn-outline-primary btn-sm" href="{{ path('admin') }}">Admin</a>
+    </div>
+</nav>
+
+<main class="py-5">
+    <div class="container">
+        {% block body %}{% endblock %}
+    </div>
+</main>
+
+<footer class="py-4 mt-5">
+    <div class="container text-center text-meta">
+        <small>Minimal Symfony boilerplate.</small>
+    </div>
+</footer>
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
+
+</body>
+</html>

@@ -1,0 +1,70 @@
+---
+services:
+  php:
+    image: ${IMAGES_PREFIX:-}app-php
+    restart: unless-stopped
+    cpus: "${PHP_CPUS:-0.75}"
+    mem_limit: ${PHP_MEMORY_LIMIT:-384M}
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SERVER_NAME: ${SERVER_NAME:-localhost}, php:80
+      DEFAULT_URI: https://${SERVER_NAME:-localhost}:${HTTPS_PORT:-443}
+      DATABASE_URL: "mysql://app:superpassword@db:3306/app?serverVersion=8.0"
+      SYMFONY_VERSION: ${SYMFONY_VERSION:-}
+      STABILITY: ${STABILITY:-stable}
+      GOMEMLIMIT: ${PHP_GO_MEMORY_LIMIT:-320MiB}
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+    logging:
+      driver: json-file
+      options:
+        max-size: "${PHP_LOG_MAX_SIZE:-10m}"
+        max-file: "${PHP_LOG_MAX_FILE:-3}"
+    ports:
+      - name: http
+        target: 80
+        published: ${HTTP_PORT:-80}
+        protocol: tcp
+      - name: https
+        target: 443
+        published: ${HTTPS_PORT:-443}
+        protocol: tcp
+      - name: http3
+        target: 443
+        published: ${HTTP3_PORT:-443}
+        protocol: udp
+
+  db:
+    image: mysql:8.0
+    container_name: boilerplate_db
+    command: --default-authentication-plugin=mysql_native_password
+    cpus: "${MYSQL_CPUS:-0.50}"
+    mem_limit: ${MYSQL_MEMORY_LIMIT:-384M}
+    healthcheck:
+      test: [ "CMD-SHELL", "mysqladmin ping -h localhost -u$${MYSQL_USER} -p$${MYSQL_PASSWORD} --silent" ]
+      interval: 5s
+      retries: 20
+      start_period: 30s
+    environment:
+      MYSQL_DATABASE: app
+      MYSQL_USER: app
+      MYSQL_PASSWORD: superpassword
+      MYSQL_ROOT_PASSWORD: rootpassword
+    volumes:
+      - mysqldata:/var/lib/mysql
+      - ./my.cnf:/etc/mysql/my.cnf:ro
+    restart: always
+    logging:
+      driver: json-file
+      options:
+        max-size: "${MYSQL_LOG_MAX_SIZE:-10m}"
+        max-file: "${MYSQL_LOG_MAX_FILE:-3}"
+
+
+volumes:
+  caddy_data:
+  caddy_config:
+  mysqldata:

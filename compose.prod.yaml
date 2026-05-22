@@ -1,0 +1,18 @@
+services:
+  php:
+    build:
+      context: .
+      target: frankenphp_prod
+    environment:
+      APP_ENV: prod
+      APP_SECRET: ${APP_SECRET:?Set APP_SECRET in .env.deploy}
+      SERVER_NAME: ${SERVER_NAME:?Set SERVER_NAME in .env.deploy}
+      DEFAULT_URI: https://${PRIMARY_DOMAIN:?Set PRIMARY_DOMAIN in .env.deploy}
+      DATABASE_URL: "mysql://${MYSQL_USER:-app}:${MYSQL_PASSWORD:?Set MYSQL_PASSWORD in .env.deploy}@db:3306/${MYSQL_DATABASE:-app}?serverVersion=8.0&charset=utf8mb4"
+
+  db:
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-app}
+      MYSQL_USER: ${MYSQL_USER:-app}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Set MYSQL_PASSWORD in .env.deploy}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in .env.deploy}

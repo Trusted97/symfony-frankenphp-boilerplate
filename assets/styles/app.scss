@@ -1,0 +1,34 @@
+$primary: #2563eb;
+$secondary: #475569;
+$success: #16a34a;
+$danger: #dc2626;
+$warning: #d97706;
+$light: #f8fafc;
+$dark: #0f172a;
+
+$font-family-sans-serif: system-ui, -apple-system, "Segoe UI", sans-serif;
+$border-radius: .5rem;
+$border-radius-lg: .65rem;
+
+@import "~bootstrap";
+
+body {
+    background: #f8fafc;
+    color: #0f172a;
+}
+
+main {
+    min-height: 70vh;
+}
+
+.navbar {
+    background: #ffffff;
+}
+
+.navbar-brand {
+    font-weight: 700;
+}
+
+.text-meta {
+    color: #64748b;
+}
