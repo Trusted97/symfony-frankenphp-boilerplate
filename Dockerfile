@@ -49,7 +49,7 @@ RUN --mount=type=cache,target=/tmp/composer-cache \
 # ======================
 # Node/Yarn builder
 # ======================
-FROM node:20-alpine AS node_builder
+FROM node:25-alpine AS node_builder
 
 # Enable Yarn through Corepack
 RUN corepack enable
