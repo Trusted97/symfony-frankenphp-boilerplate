@@ -51,6 +51,9 @@ RUN --mount=type=cache,target=/tmp/composer-cache \
 # ======================
 FROM node:20-alpine AS node_builder
 
+# Enable Yarn through Corepack
+RUN corepack enable
+
 WORKDIR /app
 
 COPY --from=composer_vendor /app/vendor ./vendor
